@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import API from '../API';
+//helpers
+import { isPersistedState } from '../helpers';
 
 export const useMovieFetch = (movieId) => {
     const [state, setState] = useState({});
@@ -27,8 +29,21 @@ export const useMovieFetch = (movieId) => {
                 setError(true)
             }
         }
+        //check if we have anything in the session storage
+        const sessionState = isPersistedState(movieId);
+        if (sessionState) {
+            console.log("Grabbing from the session storage")
+            setState(sessionState);
+            setLoading(false)
+            return;
+        }
+        console.log("Grabbing from the API")
         fetchMovie();
     }, [movieId])
 
+    //In-order to right to the session storage we have to make the useEffect which can right to the session storage
+    useEffect(() => {
+        sessionStorage.setItem(movieId, JSON.stringify(state))
+    }, [movieId, state])
     return ({ state, loading, error })
 }

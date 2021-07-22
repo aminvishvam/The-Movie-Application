@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 //styles
 import { Wrapper, Image } from './Actor.styles';
-import { string } from 'yargs';
 
 const Actor = ({ name, character, imageUrl }) => {
     return (
